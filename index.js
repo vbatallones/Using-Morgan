@@ -1,7 +1,8 @@
+const { application } = require('express');
 const express = require('express')
 const app = express();
 const morgan = require('morgan');
-
+const AppError = require('./AppError')
 
 app.use(morgan('tiny'))
 
@@ -16,6 +17,10 @@ app.use('/dogs', (req, res, next) => {
     next();
 })
 
+app.use((err,req,res,next) => {
+    console.log('errrrrrrorrrorororoor')
+})
+
 // JUST A DEMO!
 
 // a function to verify a specific route if you add it in the route as a callback.
@@ -23,6 +28,8 @@ app.use('/dogs', (req, res, next) => {
 const verifyPassword = ((req, res, next) => {
     const {password } = req.query;
     password === 'mysecret' ? next() : res.send('Sorry you need a password');
+
+    throw new AppError('Password required', 401)
 })
 
 app.get('/', (req, res) => {
